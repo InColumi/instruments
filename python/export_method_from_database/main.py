@@ -54,7 +54,7 @@ def save_schema(schema: str, path):
 
 
 def main():
-    schemes = ['logs', 'public', 'reports']
+    schemes = ['logs', 'public', 'reports', 'wadm']
     for schema in schemes:
         path = os.path.join(config.DIR_FOR_TRACKING_CHANGES, schema)
         if os.path.isdir(path):
