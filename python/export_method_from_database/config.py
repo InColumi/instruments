@@ -5,11 +5,14 @@ __all__ = ['config']
 
 
 class Settings(BaseSettings):
-    SQLALCHEMY_DATABASE_URI: str
-    DIR_FOR_TRACKING_CHANGES: str
+    MEDACCOUNT_DATABASE_URI: str
+    MEDACCOUNT_DIR_FOR_TRACKING_CHANGES: str
+
+    REESTR_LLO_DATEBASE_URI: str
+    REESTR_LLO_DIR_FOR_TRACKING_CHANGES: str
 
     class Config:
-        env_file = '.env'
+        env_file = '/home/user/Desktop/Projects/instruments/python/export_method_from_database/.env'
 
 
 try:
