@@ -1,24 +1,24 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, Engine
 from sqlalchemy.exc import DisconnectionError
 
 class DatabaseEgineBase(ABC):
 
     @classmethod
     @abstractmethod
-    def get_connection(cls, database_uri: str):
+    def get_engine(cls, database_uri: str):
         pass
 
 class DatabaseEgine(DatabaseEgineBase):
     """Подлючение к БД и создание подлючения."""
 
     @classmethod
-    def get_connection(cls, database_uri: str):
+    def get_engine(cls, database_uri: str):
         """Подлючение к БД и создание подлючения."""
         try:
             print('Start connection')
-            connect = create_engine(database_uri).connect()
+            connect = create_engine(database_uri)
             print('Connected success')
         except DisconnectionError as err:
             raise Exception(f'OperationalError: {err}')
@@ -33,14 +33,14 @@ class DatabaseEgine(DatabaseEgineBase):
 @dataclass
 class Executor:
 
-    __connection: DatabaseEgineBase
+    __engine: Engine
     """Исполнитель sql строк."""
 
     def excecute_raw_fetchone(self, sql: str):
         """Сырое выполенние sql строки."""
-        with self.__connection as connection:
+        with self.__engine.connect() as connection:
             try:
-                yield connection.execute(text(sql)).fetchone()
-                connection.close()
+                return connection.execute(text(sql)).fetchone()
             except Exception as e:
+                connection.close()
                 print('Excecutor', str(e))

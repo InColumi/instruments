@@ -45,9 +45,7 @@ class Exporter:
         return ''.join([name[:255 - len(end)], end])
 
     def __save_schema(self, schema: str, path):
-        print(1)
-        sql = Exporter.__create_sql_query(schema)
-        print(123)
+        sql = self.__create_sql_query(schema)
         data = self.__excecutor.excecute_raw_fetchone(sql)[0]
         for item in data:
             params = self.__get_params(item['body'])
@@ -62,11 +60,11 @@ class Exporter:
                     file.write(item['comment'])
 
     def export(self, path_to_save: str):
-        print('export')
         import shutil
         for schema in self.__white_list_schema:
             path = os.path.join(path_to_save, schema)
+            print(path)
             if os.path.isdir(path):
                 shutil.rmtree(path)
-            os.mkdir(path)
+            os.makedirs(path, exist_ok=True)
             self.__save_schema(schema, path)
