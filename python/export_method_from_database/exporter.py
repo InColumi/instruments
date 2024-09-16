@@ -1,4 +1,5 @@
 import os
+import aiofiles
 from database import Executor
 from dataclasses import dataclass
 
@@ -44,7 +45,7 @@ class Exporter:
         end = '...).sql'
         return ''.join([name[:255 - len(end)], end])
 
-    def __save_schema(self, schema: str, path):
+    async def __save_schema(self, schema: str, path):
         sql = self.__create_sql_query(schema)
         data = self.__excecutor.excecute_raw_fetchone(sql)[0]
         for item in data:
@@ -53,13 +54,13 @@ class Exporter:
             if len(file_name) > 255:
                 file_name = self.__cut_long_name(file_name)
             new_path_file = os.path.join(path, file_name)
-            with open(new_path_file, 'w') as file:
-                file.write(item['body'])
-                file.write('\n')
+            async with aiofiles.open(new_path_file, 'w') as file:
+                await file.write(item['body'])
+                await file.write('\n')
                 if item['comment']:
-                    file.write(item['comment'])
+                    await file.write(item['comment'])
 
-    def export(self, path_to_save: str):
+    async def export(self, path_to_save: str):
         import shutil
         for schema in self.__white_list_schema:
             path = os.path.join(path_to_save, schema)
@@ -67,4 +68,4 @@ class Exporter:
             if os.path.isdir(path):
                 shutil.rmtree(path)
             os.makedirs(path, exist_ok=True)
-            self.__save_schema(schema, path)
+            await self.__save_schema(schema, path)
