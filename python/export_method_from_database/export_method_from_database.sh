@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
-source /home/user/Desktop/Projects/instruments/python/export_method_from_database/venv/bin/activate
-echo 'venv activated'
-nice -5 python3 /home/user/Desktop/Projects/instruments/python/export_method_from_database/main.py
+WDIR=/home/user/Desktop/Projects/instruments/python/export_method_from_database
+DIR_FOR_SAVE=/home/user/Desktop/Projects
 
-code '/home/user/Desktop/Projects/scripts_medaccount'
-code '/home/user/Desktop/Projects/Scripts'
+source $WDIR/venv/bin/activate
+echo 'venv Activated'
+
+ionice -c 3 python3 $WDIR/main.py
+
+ionice -c 3 code $DIR_FOR_SAVE/scripts_medaccount
+ionice -c 3 code $DIR_FOR_SAVE/Scripts
