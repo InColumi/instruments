@@ -5,6 +5,8 @@ __all__ = ['config']
 
 
 class Settings(BaseSettings):
+    NAME_FOLDER_FOR_METHODS: str
+
     MEDACCOUNT_DATABASE_URI: str
     MEDACCOUNT_DIR_FOR_TRACKING_CHANGES: str
 

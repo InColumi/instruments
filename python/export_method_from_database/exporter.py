@@ -6,6 +6,7 @@ from dataclasses import dataclass
 @dataclass
 class Exporter:
     __excecutor: Executor
+    __name_folder_for_method: str
     __white_list_schema: tuple = tuple()
     __white_list_methods: tuple = tuple()
     __black_list_schema: tuple = tuple()
@@ -63,7 +64,7 @@ class Exporter:
     async def export(self, path_to_save: str):
         import shutil
         for schema in self.__white_list_schema:
-            path = os.path.join(path_to_save, schema)
+            path = os.path.join(path_to_save, schema, self.__name_folder_for_method)
             print(path)
             if os.path.isdir(path):
                 shutil.rmtree(path)
